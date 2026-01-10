@@ -2,3 +2,11 @@ flask
 pymongo
 flask-cors
 python-dotenv
+# pip install -r requirements.txt
+
+opencv-python 
+ultralytics
+lap
+numpy 
+playsound 
+requests
