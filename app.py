@@ -12,6 +12,7 @@ from email.message import EmailMessage
 load_dotenv()
 
 app = Flask(__name__)
+alert_triggered = False
 CORS(app)
 
 # ---------------- DATABASE ----------------
@@ -69,6 +70,10 @@ def warning():
 
 
 # ---------------- START SESSION ----------------
+@app.route("/check-alert")
+def check_alert():
+    return jsonify({"alert": alert_triggered})
+
 @app.route("/start-session", methods=["POST"])
 def start_session():
     data = request.json
@@ -125,8 +130,11 @@ def end_session():
 # ---------------- DEMO ALERT TRIGGER ----------------
 @app.route("/trigger-alert")
 def trigger_alert():
+    global alert_triggered
+    alert_triggered = True
     trigger_warning()
-    return "Alert emails sent"
+    print("🚨 Alert received from tracker")
+    return jsonify({"status": "alert set"})
 
 
 # ---------------- RUN ----------------

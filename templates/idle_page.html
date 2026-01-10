@@ -155,12 +155,16 @@
     }
 
     /* ---------- DEMO AUTO WARNING ---------- */
-    setTimeout(() => {
-      fetch("/trigger-alert");
+    
+    setInterval(async () => {
+      const res = await fetch("/check-alert");
+      const data = await res.json();
 
-      window.location.href = "/warning";
+      if (data.alert) {
+        window.location.href = "/warning";
+      }
+    }, 1000); // check every second
 
-    }, 10000);
   </script>
 
 </body>
