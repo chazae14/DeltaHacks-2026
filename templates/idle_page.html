@@ -15,6 +15,7 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            position: relative; /* This allows the button to pin to the edges */
         }
         .container {
             background-color: white; 
@@ -37,6 +38,29 @@
             color: #ff3333; 
             animation: blink 0.75s infinite; 
         }
+
+        /* --- THE BUTTON CSS (You were missing this!) --- */
+        .fs-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background-color: rgba(255, 255, 255, 0.2); 
+            color: white;
+            border: 2px solid white;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+
+        .fs-btn:hover {
+            background-color: white;
+            color: #006bad;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -48,6 +72,22 @@
         <p>Their belongings are being monitored & tracked by the webcam</p>
         <p id="clock"></p>
     </div>
+
+    <button onclick="goFullscreen()" class="fs-btn">
+        <i class="fas fa-expand"></i> Fullscreen
+    </button>
+
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    
+    <script>
+        function goFullscreen() {
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Mac Chrome/Safari */
+                elem.webkitRequestFullscreen();
+            }
+        }
+    </script>
 </body>
 </html>

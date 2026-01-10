@@ -1,13 +1,38 @@
-/* This defines how the blink happens */
+/* 1. First, the animation */
 @keyframes blink {
     0% { opacity: 1; }
     50% { opacity: 0.2; }
     100% { opacity: 1; }
 }
 
-/* This applies the blink to your camera icon */
+/* 2. Style the icon */
 .fa-camera {
     margin-bottom: 15px;
-    color: #ff3333; /* Makes the camera red like a recording light */
-    animation: blink 1.5s infinite; /* Runs the 'blink' every 1.5 seconds forever */
+    color: #ff3333; 
+    animation: blink 1.5s infinite; 
+}
+
+/* 3. Style the button - Make sure this is BELOW the other styles */
+.fs-btn {
+    position: absolute !important; /* Force it to ignore flexbox */
+    bottom: 30px;
+    right: 30px;
+    padding: 12px 24px;
+    background-color: rgba(255, 255, 255, 0.2); 
+    color: white;
+    border: 2px solid white;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    z-index: 9999; /* Ensures it is on the very top layer */
+}
+
+.fs-btn:hover {
+    background-color: white;
+    color: #006bad;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
