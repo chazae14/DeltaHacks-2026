@@ -1,0 +1,13 @@
+/* This defines how the blink happens */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+
+/* This applies the blink to your camera icon */
+.fa-camera {
+    margin-bottom: 15px;
+    color: #ff3333; /* Makes the camera red like a recording light */
+    animation: blink 1.5s infinite; /* Runs the 'blink' every 1.5 seconds forever */
+}
