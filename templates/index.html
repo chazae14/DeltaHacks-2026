@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Start Monitoring</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0e1a2b;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #16263d;
+      padding: 30px;
+      border-radius: 10px;
+      width: 320px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 15px 0;
+      border-radius: 5px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ff3b3b;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e03030;
+    }
+  </style>
+  <link rel="icon" href="{{ url_for('static', filename='wms_favicon.ico') }}">
+</head>
+<body>
+
+  <div class="card">
+    <h2>Monitoring System</h2>
+    <p>Enter your email to begin monitoring</p>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="your@email.com"
+      required
+    />
+
+    <button onclick="startMonitoring()">Start Monitoring</button>
+  </div>
+
+  <script>
+  async function startMonitoring() {
+    const email = document.getElementById("email").value;
+
+    if (!email) {
+      alert("Please enter a valid email.");
+      return;
+    }
+
+    // 🔓 Unlock audio permission (required for later alarm)
+    const audioUnlock = new Audio();
+    audioUnlock.muted = true;
+    audioUnlock.play().catch(() => {});
+
+    try {
+      const response = await fetch("/start-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Failed to start monitoring");
+        return;
+      }
+
+      // 🔑 VERY IMPORTANT: show passkey ONCE
+      alert(`Your session passkey is: ${data.passkey}\nSave this to end monitoring.`);
+
+      // Move to idle monitoring page
+      window.location.href = "/idle_page";
+
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Is Flask running?");
+    }
+  }
+</script>
+
+</body>
+</html>

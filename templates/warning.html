@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WARNING</title>
+  <style>
+    body {
+      height: 100vh;
+      background: radial-gradient(circle, #1a0000, #990000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      color: white;
+      cursor: pointer;
+    }
+
+    .warning-container {
+      text-align: center;
+    }
+
+    #warning {
+      font-size: 6rem;
+      color: red;
+      animation: flash 0.8s infinite;
+    }
+
+    .subtitle {
+      margin-top: 1rem;
+      font-size: 1.4rem;
+      color: #ddd;
+    }
+
+    .hint {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    @keyframes flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+  </style>
+  <link rel="icon" href="{{ url_for('static', filename='wms_favicon.ico') }}">
+</head>
+<body>
+
+  <div class="warning-container">
+    <h1 id="warning">! WARNING !</h1>
+    <p class="subtitle">These items are being monitored</p>
+    <p class="subtitle">We can see you</p>
+  </div>
+
+  <audio src="{{ url_for('static', filename='siren.mp3') }}"></audio>
+
+  <script>
+    const siren = new Audio("/static/siren.mp3");
+
+    window.addEventListener("load", () => {
+      siren.volume = 0.9;
+
+      siren.play().catch(err => {
+        console.warn("Autoplay blocked:", err);
+      });
+
+      setTimeout(() => {
+        siren.pause();
+        siren.currentTime = 0;
+      }, 7000);
+
+      setTimeout(() => {
+        window.location.href = "/idle_page";
+      }, 10000);
+    });
+  </script>
+
+</body>
+</html>

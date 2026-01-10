@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Monitoring Active</title>
+
+  <style>
+    body {
+      background: #0e1a2b;
+      color: #00ffcc;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      background: #16263d;
+      padding: 40px;
+      border-radius: 10px;
+      width: 400px;
+    }
+
+    .status {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    .pulse {
+      width: 20px;
+      height: 20px;
+      margin: 20px auto;
+      background: #00ffcc;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px;
+      width: 100%;
+      background: #ff3b3b;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e03030;
+    }
+  </style>
+  <link rel="icon" href="{{ url_for('static', filename='wms_favicon.ico') }}">
+</head>
+<body>
+
+  <div class="container">
+    <div class="status">Monitoring in progress…</div>
+    <div class="pulse"></div>
+    <p>System is actively watching items.</p>
+
+    <button onclick="endMonitoring()">End Monitoring</button>
+  </div>
+
+  <script>
+    async function endMonitoring() {
+      const email = prompt("Enter your email:");
+      if (!email) return;
+
+      const passkey = prompt("Enter your 2-digit passkey:");
+      if (!passkey) return;
+
+      const res = await fetch("/end-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, passkey })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Failed to end session");
+        return;
+      }
+
+      alert("Monitoring ended successfully.");
+      window.location.href = "/";
+    }
+
+    // 🔧 DEMO ONLY — auto warning
+    setTimeout(() => {
+      fetch("/trigger-alert");
+      window.location.href = "/warning";
+    }, 10000);
+  </script>
+
+</body>
+</html>
