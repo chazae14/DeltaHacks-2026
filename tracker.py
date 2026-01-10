@@ -1,6 +1,8 @@
 #  python3 tracker.py to run
 import cv2
 from ultralytics import YOLO
+import requests
+import time
 
 # load model
 model = YOLO("yolov8l.pt")
@@ -18,6 +20,11 @@ baseline_count = None
 smoothed_count = None
 drop_counter = 0
 alarm_triggered = False
+
+FLASK_ALERT_URL = "http://127.0.0.1:5000/trigger-alert"
+
+last_flask_alert = 0
+FLASK_COOLDOWN = 10  # seconds (prevents email spam)
 
 # reads the next frame from the stream
 ret, frame = cap.read()
@@ -89,6 +96,16 @@ while True:
     if drop_counter >= DROP_FRAMES and not alarm_triggered:
         alarm_triggered = True
         print("🚨 ALERT: OBJECT REMOVED!")
+
+        now = time.time()
+        if now - last_flask_alert > FLASK_COOLDOWN:
+            try:
+                requests.get(FLASK_ALERT_URL, timeout=1)
+                print("Flask alert triggered")
+            except requests.exceptions.RequestException as e:
+                print("Failed to reach Flask server:", e)
+
+            last_flask_alert = now
 
     # display the status
     if alarm_triggered:
