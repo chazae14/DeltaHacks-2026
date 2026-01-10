@@ -9,13 +9,11 @@
             background-color: #90D5FF;
             font-family: 'Poppins', sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
-            position: relative; /* This allows the button to pin to the edges */
+            position: relative; 
         }
         .container {
             background-color: white; 
@@ -24,70 +22,73 @@
             border-radius: 25px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 400px;
         }
-
-        /* --- THE BLINKING CODE --- */
+        .main-logo {
+            width: 150px; 
+            height: auto;
+            display: block;
+            margin: 0 auto 15px;
+        }
+        .fa-camera {
+            color: #ff8a8a; 
+            margin-bottom: 15px;
+            animation: blink 0.75s infinite;
+        }
         @keyframes blink {
             0% { opacity: 1; }
             50% { opacity: 0.2; }
             100% { opacity: 1; }
         }
-
-        .fa-camera {
-            margin-bottom: 15px;
-            color: #ff3333; 
-            animation: blink 0.75s infinite; 
-        }
-
-        /* --- THE BUTTON CSS (You were missing this!) --- */
         .fs-btn {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 24px;
-            background-color: rgba(255, 255, 255, 0.2); 
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.2);
             color: white;
             border: 2px solid white;
             border-radius: 12px;
-            font-family: 'Poppins', sans-serif;
             cursor: pointer;
-            transition: all 0.3s ease;
             backdrop-filter: blur(5px);
-            z-index: 10;
         }
-
-        .fs-btn:hover {
-            background-color: white;
-            color: #006bad;
-            transform: translateY(-2px);
-        }
+        .fs-btn i { margin-right: 8px; }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <i class="fas fa-camera fa-4x"></i>
-        <h1><b>WatchMyStuff</b></h1>
-        <p>This person will be back soon</p>
-        <p>Their belongings are being monitored & tracked by the webcam</p>
-        <p id="clock"></p>
+
+<div class="container">
+    <img src="../static/idle_logo.png" alt="Logo" class="main-logo">
+    <i class="fas fa-camera fa-3x"></i>
+    <p>This person will be back soon. Their belongings are being monitored & tracked</p>
     </div>
 
-    <button onclick="goFullscreen()" class="fs-btn">
-        <i class="fas fa-expand"></i> Fullscreen
-    </button>
+<button onclick="goFullscreen()" class="fs-btn">
+    <i class="fas fa-expand"></i> Fullscreen
+</button>
 
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-    
-    <script>
-        function goFullscreen() {
+<script>
+    function goFullscreen() {
+        // Check if we are already in fullscreen
+        let isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
+        if (!isFullscreen) {
+            // ENTER Fullscreen
             let elem = document.documentElement;
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Mac Chrome/Safari */
+            } else if (elem.webkitRequestFullscreen) {
                 elem.webkitRequestFullscreen();
             }
+        } else {
+            // EXIT Fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
         }
-    </script>
+    }
+</script>
 </body>
 </html>

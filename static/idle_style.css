@@ -1,15 +1,21 @@
+.container {
+    background-color: white; 
+    color: #006bad;
+    padding: 2.5rem;      /* Slightly more padding for a cleaner look */
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    
+    /* These lines control the size of the white box */
+    width: 90%;           /* Flexible on small screens */
+    max-width: 400px;     /* Keeps it from getting too wide on desktop */
+}
+
 /* 1. First, the animation */
 @keyframes blink {
     0% { opacity: 1; }
     50% { opacity: 0.2; }
     100% { opacity: 1; }
-}
-
-/* 2. Style the icon */
-.fa-camera {
-    margin-bottom: 15px;
-    color: #ff3333; 
-    animation: blink 1.5s infinite; 
 }
 
 /* 3. Style the button - Make sure this is BELOW the other styles */
@@ -18,9 +24,8 @@
     bottom: 30px;
     right: 30px;
     padding: 12px 24px;
-    background-color: rgba(255, 255, 255, 0.2); 
+    background-color: rgb(255, 255, 255); 
     color: white;
-    border: 2px solid white;
     border-radius: 12px;
     font-family: 'Poppins', sans-serif;
     font-weight: bold;
@@ -30,9 +35,33 @@
     z-index: 9999; /* Ensures it is on the very top layer */
 }
 
-.fs-btn:hover {
-    background-color: white;
-    color: #006bad;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+/* Fix the logo size */
+.main-logo {
+    width: 150px; 
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+/* Use ONE camera style (the pink one) */
+.fa-camera {
+    color: #ff8a8a; 
+    margin-bottom: 15px;
+    animation: blink 0.75s infinite;
+}
+
+/* The space for your button icon */
+.fs-btn i {
+    margin-right: 8px;
+}
+
+.icon-wrapper {
+    margin-bottom: 15px;
+    text-align: center; /* Ensures the icon is centered */
+}
+
+
+.status-text {
+    font-weight: 500;
+    margin-top: 10px;
 }
