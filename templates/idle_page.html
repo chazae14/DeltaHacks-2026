@@ -25,7 +25,7 @@
             max-width: 400px;
         }
         .main-logo {
-            width: 150px; 
+            width: 200px; 
             height: auto;
             display: block;
             margin: 0 auto 15px;
@@ -40,19 +40,37 @@
             50% { opacity: 0.2; }
             100% { opacity: 1; }
         }
+        
+        /* This is your normal button state */
         .fs-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
+            position: absolute !important;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background-color: #ffffff; 
+            color: #006bad; 
+            border: 2px solid #ffffff;
             border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
             cursor: pointer;
-            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease; /* This makes the hover smooth, not jerky */
+            z-index: 9999;
         }
-        .fs-btn i { margin-right: 8px; }
+
+        /* This is what happens when you HOVER */
+        .fs-btn:hover {
+            background-color: #006bad; /* Changes background to blue */
+            color: #ffffff;            /* Changes text and icon to white */
+            border: 2px solid #006bad;
+        }
+
+        /* Keeps the icon spacing correct even during hover */
+        .fs-btn i {
+            margin-right: 12px; 
+        }
     </style>
 </head>
 <body>
