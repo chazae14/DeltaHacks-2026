@@ -41,7 +41,7 @@
             100% { opacity: 1; }
         }
         
-        /* This is your normal button state */
+        /* normal button */
         .fs-btn {
             position: absolute !important;
             bottom: 30px;
@@ -60,14 +60,14 @@
             z-index: 9999;
         }
 
-        /* This is what happens when you HOVER */
+        /* hover button */
         .fs-btn:hover {
             background-color: #006bad; /* Changes background to blue */
             color: #ffffff;            /* Changes text and icon to white */
             border: 2px solid #006bad;
         }
 
-        /* Keeps the icon spacing correct even during hover */
+        /* button spacing */
         .fs-btn i {
             margin-right: 12px; 
         }
@@ -87,11 +87,12 @@
 
 <script>
     function goFullscreen() {
-        // Check if we are already in fullscreen
+        // check if already in full screen
         let isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
 
+        // if not already in full screen
         if (!isFullscreen) {
-            // ENTER Fullscreen
+            // enter full screen
             let elem = document.documentElement;
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
@@ -99,7 +100,7 @@
                 elem.webkitRequestFullscreen();
             }
         } else {
-            // EXIT Fullscreen
+            // exit fullscreen
             if (document.exitFullscreen) {
                 document.exitFullscreen();
             } else if (document.webkitExitFullscreen) {
