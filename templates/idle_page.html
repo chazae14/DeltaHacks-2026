@@ -1,77 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Monitoring Active</title>
+  <meta charset="UTF-8">
+  <title>Monitoring</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
     body {
-      background: #0e1a2b;
-      color: #00ffcc;
-      font-family: Arial, sans-serif;
+      background-color: #90D5FF;
+      font-family: 'Poppins', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      text-align: center;
+      margin: 0;
+      position: relative;
     }
 
     .container {
-      background: #16263d;
-      padding: 40px;
-      border-radius: 10px;
-      width: 400px;
+      background-color: white;
+      color: #006bad;
+      padding: 2rem;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 400px;
     }
 
-    .status {
-      font-size: 22px;
+    .main-logo {
+      width: 200px;
+      height: auto;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    .fa-camera {
+      color: #ff8a8a;
       margin-bottom: 15px;
+      animation: blink 0.75s infinite;
     }
 
-    .pulse {
-      width: 20px;
-      height: 20px;
-      margin: 20px auto;
-      background: #00ffcc;
-      border-radius: 50%;
-      animation: pulse 1.5s infinite;
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.2; }
+      100% { opacity: 1; }
     }
 
-    @keyframes pulse {
-      0% { opacity: 0.3; }
-      50% { opacity: 1; }
-      100% { opacity: 0.3; }
-    }
-
-    button {
-      margin-top: 25px;
-      padding: 12px;
-      width: 100%;
-      background: #ff3b3b;
+    .end-btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #ff8a8a;
       border: none;
-      border-radius: 5px;
+      border-radius: 12px;
       color: white;
-      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
+      width: 100%;
     }
 
-    button:hover {
-      background: #e03030;
+    .fs-btn {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      padding: 12px 24px;
+      background-color: #ffffff;
+      color: #006bad;
+      border: 2px solid #ffffff;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+
+    .fs-btn:hover {
+      background-color: #006bad;
+      color: #ffffff;
+      border: 2px solid #006bad;
+    }
+
+    .fs-btn i {
+      margin-right: 12px;
     }
   </style>
-  <link rel="icon" href="{{ url_for('static', filename='wms_favicon.ico') }}">
 </head>
+
 <body>
 
   <div class="container">
-    <div class="status">Monitoring in progress…</div>
-    <div class="pulse"></div>
-    <p>System is actively watching items.</p>
+    <img src="../static/idle_logo.png" alt="Logo" class="main-logo">
+    <i class="fas fa-camera fa-3x"></i>
+    <p>This person will be back soon. Their device and belongings are being tracked.</p>
 
-    <button onclick="endMonitoring()">End Monitoring</button>
+    <button class="end-btn" onclick="endMonitoring()">
+      End Monitoring
+    </button>
   </div>
 
+  <button onclick="goFullscreen()" class="fs-btn">
+    <i class="fas fa-expand"></i> Full Screen
+  </button>
+
   <script>
+    /* ---------- FULLSCREEN ---------- */
+    function goFullscreen() {
+      let isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
+      if (!isFullscreen) {
+        let elem = document.documentElement;
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+
+    /* ---------- END MONITORING ---------- */
     async function endMonitoring() {
       const email = prompt("Enter your email:");
       if (!email) return;
@@ -79,29 +133,33 @@
       const passkey = prompt("Enter your 2-digit passkey:");
       if (!passkey) return;
 
-      const res = await fetch("/end-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, passkey })
-      });
+      try {
+        const res = await fetch("/end-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, passkey })
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        alert(data.error || "Failed to end session");
-        return;
+        if (!res.ok) {
+          alert(data.error || "Failed to end monitoring");
+          return;
+        }
+
+        alert("Monitoring ended successfully.");
+        window.location.href = "/";
+      } catch (err) {
+        alert("Server error. Is Flask running?");
       }
-
-      alert("Monitoring ended successfully.");
-      window.location.href = "/";
     }
 
-    // 🔧 DEMO ONLY — auto warning
+    /* ---------- DEMO AUTO WARNING ---------- */
     setTimeout(() => {
       fetch("/trigger-alert");
+
       window.location.href = "/warning";
+
     }, 10000);
   </script>
 

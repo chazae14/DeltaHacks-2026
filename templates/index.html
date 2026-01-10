@@ -1,111 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Start Monitoring</title>
+    <meta charset="UTF-8">
+    <title>WatchMyStuff</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0e1a2b;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='background.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .card {
-      background: #16263d;
-      padding: 30px;
-      border-radius: 10px;
-      width: 320px;
-      text-align: center;
-    }
+        .container {
+            background: rgba(255, 255, 255, 0.92);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            width: 360px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
+        }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 15px 0;
-      border-radius: 5px;
-      border: none;
-    }
+        img {
+            width: 280px;
+            margin-bottom: 20px;
+        }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #ff3b3b;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+        p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
 
-    button:hover {
-      background: #e03030;
-    }
-  </style>
-  <link rel="icon" href="{{ url_for('static', filename='wms_favicon.ico') }}">
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            height: 80px;
+            font-size: 28px;
+            font-weight: bold;
+            background-color: #2ECC71;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #27AE60;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #2ECC71;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
 </head>
+
 <body>
 
-  <div class="card">
-    <h2>Monitoring System</h2>
-    <p>Enter your email to begin monitoring</p>
+<div class="container" id="home">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="WatchMyStuff Logo">
 
-    <input
-      type="email"
-      id="email"
-      placeholder="your@email.com"
-      required
-    />
+    <p>Keep your belongings safe while studying.</p>
+
+    <input type="email" id="email" placeholder="user@example.com">
 
     <button onclick="startMonitoring()">Start Monitoring</button>
-  </div>
+
+    <div class="error" id="error"></div>
+</div>
+
+<div class="container" id="monitoring" style="display:none;">
+    <h1>🔒 Monitoring Active</h1>
+    <p>This laptop is being monitored.</p>
+    <div class="success" id="emailDisplay"></div>
+</div>
 
   <script>
-  async function startMonitoring() {
-    const email = document.getElementById("email").value;
+    async function startMonitoring() {
+      const email = document.getElementById("email").value;
 
-    if (!email) {
-      alert("Please enter a valid email.");
-      return;
-    }
-
-    // 🔓 Unlock audio permission (required for later alarm)
-    const audioUnlock = new Audio();
-    audioUnlock.muted = true;
-    audioUnlock.play().catch(() => {});
-
-    try {
-      const response = await fetch("/start-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.error || "Failed to start monitoring");
+      if (!email || !email.includes("@") || !email.includes(".")) {
+        alert("Please enter a valid email address.");
         return;
       }
 
-      // 🔑 VERY IMPORTANT: show passkey ONCE
-      alert(`Your session passkey is: ${data.passkey}\nSave this to end monitoring.`);
+      // Unlock audio permission for later alarm
+      const audioUnlock = new Audio();
+      audioUnlock.muted = true;
+      audioUnlock.play().catch(() => {});
 
-      // Move to idle monitoring page
-      window.location.href = "/idle_page";
+      try {
+        const response = await fetch("/start-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        });
 
-    } catch (err) {
-      console.error(err);
-      alert("Server error. Is Flask running?");
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || "Failed to start monitoring.");
+          return;
+        }
+
+        // 🔑 Show passkey ONCE
+        alert(
+          `Monitoring started.\n\n` +
+          `Your 2-digit passkey is: ${data.passkey}\n\n` +
+          `Save this to end monitoring.`
+        );
+
+        // Go to idle monitoring page
+        window.location.href = "/idle_page";
+
+      } catch (err) {
+        console.error(err);
+        alert("Server error. Is Flask running?");
+      }
     }
-  }
-</script>
+  </script>
 
 </body>
 </html>
