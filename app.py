@@ -17,9 +17,23 @@ CORS(app)
 
 # ---------------- DATABASE ----------------
 MONGO_URI = os.getenv("MONGO_URI")
-client = MongoClient(MONGO_URI)
-db = client.monitoring
-sessions = db.sessions
+
+client = MongoClient(
+    MONGO_URI,
+    serverSelectionTimeoutMS=5000,
+    connectTimeoutMS=5000,
+    socketTimeoutMS=5000,
+)
+
+db = client["monitoring"]
+sessions = db["sessions"]
+
+# Force connection test at startup
+try:
+    client.admin.command("ping")
+    print("MongoDB connected successfully")
+except Exception as e:
+    print("❌ MongoDB connection failed:", e)
 
 # ---------------- EMAIL ----------------
 EMAIL_USER = os.getenv("EMAIL_USER")
@@ -127,7 +141,7 @@ def end_session():
     return jsonify({"message": "Monitoring ended"})
 
 
-# ---------------- DEMO ALERT TRIGGER ----------------
+# ----------------  ALERT TRIGGER ----------------
 @app.route("/trigger-alert")
 def trigger_alert():
     global alert_triggered
